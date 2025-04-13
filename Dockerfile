@@ -17,7 +17,7 @@ COPY . .
 RUN pnpm run build
 
 # Production stage
-FROM node:18-alpine
+FROM node:18-alpine AS production
 
 WORKDIR /app
 
@@ -28,6 +28,9 @@ COPY pnpm-lock.yaml ./
 # Install production dependencies only
 RUN npm install -g pnpm
 RUN pnpm install --prod
+
+# Remove husky
+RUN npm uninstall husky
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
