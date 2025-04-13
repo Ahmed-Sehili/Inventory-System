@@ -6,9 +6,15 @@ WORKDIR /app
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
 
+# Set environment variable to production BEFORE installing dependencies
+ENV NODE_ENV=production
+
 # Install dependencies
 RUN npm install -g pnpm
 RUN pnpm install
+
+# Remove husky
+RUN npm uninstall husky
 
 # Copy source code
 COPY . .
@@ -25,12 +31,12 @@ WORKDIR /app
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
 
+# Set environment variable to production BEFORE installing dependencies
+ENV NODE_ENV=production
+
 # Install production dependencies only
 RUN npm install -g pnpm
 RUN pnpm install --prod
-
-# Remove husky
-RUN npm uninstall husky
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
