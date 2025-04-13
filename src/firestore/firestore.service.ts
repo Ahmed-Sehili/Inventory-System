@@ -1,5 +1,5 @@
 // src/firestore/firestore.service.ts
-import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { SortOrder } from 'src/product/dto/query-product.dto';
 import { LoggingService } from 'src/logging/logging.service';
@@ -12,8 +12,11 @@ import { LoggingService } from 'src/logging/logging.service';
 export class FirestoreService {
   private db: admin.firestore.Firestore;
 
-  constructor(private logger: LoggingService) {
-    this.db = admin.firestore();
+  constructor(
+    private logger: LoggingService,
+    @Inject('FIREBASE_APP') private firebaseApp: admin.app.App
+  ) {
+    this.db = this.firebaseApp.firestore();
     this.logger.setContext('FirestoreService');
   }
 

@@ -4,6 +4,7 @@ import * as Joi from 'joi';
 
 @Module({
   imports: [
+    
     NestConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -11,8 +12,10 @@ import * as Joi from 'joi';
         PORT: Joi.number().default(3000),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().default('1h'),
+        FIREBASE_SERVICE_ACCOUNT_PATH: Joi.string().required(),
       }),
     }),
+
   ],
   exports: [NestConfigModule],
 })
