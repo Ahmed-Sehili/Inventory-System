@@ -1,53 +1,52 @@
-FROM node:18-alpine AS builder
+# Stage 1: Build stage
+FROM node:20-alpine AS build
 
+# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
+# Install pnpm
+RUN npm install -g pnpm
 
-# Set environment variable to production BEFORE installing dependencies
-ENV NODE_ENV=production
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm install -g pnpm
 RUN pnpm install
-
-# Skip husky installation in production
-ENV HUSKY=0
 
 # Copy source code
 COPY . .
 
-# Build the application
+# Build application
 RUN pnpm run build
 
-# Production stage
-FROM node:18-alpine AS production
+# Stage 2: Production stage
+FROM node:20-alpine AS production
 
+# Set NODE_ENV to production
+ENV NODE_ENV=production
+
+# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
-
-# Set environment variable to production BEFORE installing dependencies
-ENV NODE_ENV=production
-
-# Install production dependencies only
+# Install pnpm
 RUN npm install -g pnpm
-RUN pnpm install --production
 
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/config ./config
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
+# Install only production dependencies
+RUN pnpm install --prod
+
+# Copy built application from build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules/.pnpm node_modules/.pnpm
+
+# Copy necessary configuration files if any
+COPY .env.example .env.example
+COPY serviceAccountKey.example.json serviceAccountKey.example.json
 
 # Expose the application port
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/main"]
