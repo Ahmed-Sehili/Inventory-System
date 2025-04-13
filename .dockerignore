@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+npm-debug.log
+pnpm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build output
+dist
+build
+coverage
+
+# Environment and configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Version control
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Tests
+test
+coverage
+.nyc_output
+
+# Temporary files
+tmp
+temp
+
+# Logs
+logs
+*.log
+
+# Exclude config files except example
+config/*
+!config/serviceAccountKey.example.json
