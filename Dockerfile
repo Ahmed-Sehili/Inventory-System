@@ -13,8 +13,8 @@ ENV NODE_ENV=production
 RUN npm install -g pnpm
 RUN pnpm install
 
-# Remove husky
-RUN npm uninstall husky
+# Skip husky installation in production
+ENV HUSKY=0
 
 # Copy source code
 COPY . .
@@ -36,7 +36,7 @@ ENV NODE_ENV=production
 
 # Install production dependencies only
 RUN npm install -g pnpm
-RUN pnpm install --prod
+RUN pnpm install --production
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
@@ -50,4 +50,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "dist/main"]
+CMD ["node", "dist/main.js"]
