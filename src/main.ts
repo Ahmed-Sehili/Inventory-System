@@ -42,10 +42,9 @@ async function bootstrap() {
       To authenticate, first obtain a token via the /auth/login endpoint, then use it in the Authorization header.
     `)
     .setVersion('1.0')
-    .setContact('Support Team', 'https://example.com/support', 'support@example.com')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .addServer('http://localhost:3000', 'Local Development Server')
-    .addServer('https://api.example.com', 'Production Server')
+    .addServer('https://inventory-system-alg6.onrender.com', 'Production Server')
     .addTag('auth', 'Authentication endpoints for user login and token management')
     .addTag('products', 'Product management endpoints for inventory control')
     .addBearerAuth(
